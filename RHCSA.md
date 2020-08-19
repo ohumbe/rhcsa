@@ -14,7 +14,7 @@ Learn to protect and manage the security of a server by using SELinux.
 
 - Perform basic investigation and troubleshooting of accesses blocked by SELinux.
 
-
+### Content
 #### What is SELinux?
 
 - SELinux: Security Enhanced Linux
@@ -33,3 +33,45 @@ Learn to protect and manage the security of a server by using SELinux.
 
     - All these are examples of discretionary access controls (DAC), where the user has discretion over access controls
 
+  - What does SELinux add?
+
+    - SELinux defines a set of security rules that determine which process can access which files, directories, and ports.
+
+    - Every file, process, directory, and port has a special security label called an SELinux context.  While SELinux labels have several contexts (e.g. user, role, type, and sensitivity), what we really care most about for the RHCSA is the type.
+
+    - How do we view these SELinux labels?
+      
+      A: `ls -lZ`; `ps -efZ`; etc.
+
+- What are the different SELinux modes and how do you change them?
+
+  - Enforcing, Permissive, Disabled
+
+  - Check them using `getenforce`, set them (temporarily) using `setenforce`, and change the permanent setting in /etc/selinux/config
+
+- How do you Control SELinux file contexts?
+
+  - `semanage fcontext` && `chcon`
+
+  - ports: `semanage port -a -t http_port_t -p tcp`
+
+- Booleans
+
+  - What are booleans?
+
+    Booleans are simple on/off settings for SELinux, e.g. "do we allow the http server to access home directories?"; "do we allow haproxy to access any port available?"
+
+  - How do you adjust SELinux policy with booleans?
+
+    - First you could see a list of booleans and values with `getsebool`
+
+    - The `semanage boolean -l` gives you more information
+
+    - To list booleans in which the current state differs from the default state, run semanage boolean -l -C
+
+    - You could temporarily change a boolean value with `setsebool httpd_enable_homedirs on` & make sure to add -P for permanent
+
+
+- How do you troubleshoot SELinux issues?
+
+  - First, install setroubleshoot & setroubleshoot-server; then restart the auditd service - this is the recommended way to go
