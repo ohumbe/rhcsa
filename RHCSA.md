@@ -75,3 +75,35 @@ Learn to protect and manage the security of a server by using SELinux.
 - How do you troubleshoot SELinux issues?
 
   - First, install setroubleshoot & setroubleshoot-server; then restart the auditd service - this is the recommended way to go
+
+
+## Logging
+
+#### Intro: rsyslog service (persists through reboot) + systemd-journald (temp)
+
+#### /var/log; which is also used for services that are not logged using syslog
+
+#### Configuring logging events to the system
+
+- facility & priority
+
+- man rsyslog.conf
+
+- logrotate; example /var/log/messages-$DATE
+
+#### Example: humbe.log & HAProxy
+
+humbe.log:
+- edit /etc/rsyslog.conf:
+*.info                                                  /var/log/humbe.log
+
+
+haproxy.conf in /etc/rsyslog.d/:
+local0.*  /var/log/haproxy-traffic.log
+local0.info /var/log/haproxy-admin.log
+
+
+#### journalctl
+
+- example: two terminals; test `journalctl -xf` while sshing, logging in as root, changing somehting, etc.
+- journalctl --since "-1 hour"
